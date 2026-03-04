@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name - Full Stack Developer</title>
+    <title>Pranav Deshmukh - Full Stack Developer</title>
     <style>
         * {
             margin: 0;
@@ -11,11 +11,29 @@
             box-sizing: border-box;
         }
 
+        /* theme variables */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            --text-color: #fff;
+            --card-bg: rgba(30, 41, 59, 0.5);
+            --card-border: #334155;
+            --accent: #22d3ee;
+            --secondary-text: #94a3b8;
+        }
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%);
+            --text-color: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: #cbd5e1;
+            --accent: #3b82f6;
+            --secondary-text: #475569;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            color: #fff;
+            background: var(--bg-gradient);
+            color: var(--text-color);
             line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
         }
 
         .container {
@@ -53,10 +71,51 @@
             background-clip: text;
         }
 
+        /* Theme toggle button */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .theme-toggle:hover {
+            color: #22d3ee;
+        }
+
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
+        }
+        #menuToggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        @media (max-width: 768px) {
+            #menuToggle {
+                display: inline-block;
+            }
+            .nav-links {
+                position: fixed;
+                top: 4rem;
+                right: 0;
+                background: rgba(15,23,42,0.95);
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 2rem;
+                transform: translateX(100%);
+                transition: transform 0.3s;
+            }
+            .nav-links.open {
+                transform: translateX(0);
+            }
         }
 
         .nav-links a {
@@ -71,7 +130,84 @@
 
         /* Hero Section */
         .hero {
+            position: relative;
+            overflow: hidden;
             padding: 8rem 2rem 5rem;
+        }
+
+        /* Particles canvas */
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Typewriter effect */
+        .typewriter {
+            display: inline-block;
+            border-right: 2px solid #22d3ee;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink-caret 0.7s step-end infinite;
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #22d3ee; }
+        }
+
+        /* Reveal animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15,23,42,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 2000;
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            color: #cbd5e1;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #94a3b8;
+            cursor: pointer;
         }
 
         .hero-badge {
@@ -227,6 +363,7 @@
             border-radius: 1rem;
             padding: 1.5rem;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .project-card:hover {
@@ -306,6 +443,48 @@
             background: #475569;
         }
 
+        /* Back to top button */
+        #toTop {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--accent);
+            color: var(--text-color);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 1000;
+        }
+        #toTop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 3000;
+        }
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -333,30 +512,34 @@
 <body>
     <!-- Navigation -->
     <nav>
-        <div class="nav-content">
-            <div class="logo">&lt;YourName /&gt;</div>
-            <ul class="nav-links">
+        <div class="nav-content fade-in">
+            <div class="logo">&lt;Pranav Deshmukh /&gt;</div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
+            <button id="menuToggle" class="theme-toggle" title="Toggle menu">☰</button>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="resume.pdf" target="_blank">Resume</a></li>
             </ul>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section id="home" class="hero fade-in">
+        <canvas id="particles"></canvas>
         <div class="container">
             <div class="hero-badge">
                 <span>💻</span>
                 <span>Full-Stack Developer</span>
             </div>
-            <h1>Building Scalable<br>Web Applications</h1>
+            <h1><span id="typewriter" class="typewriter"></span></h1>
             <p>Backend & Full-Stack Developer specializing in React, Node.js, and modern web technologies. Passionate about competitive programming and solving complex algorithmic challenges.</p>
 
             <!-- CP Stats -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card fade-in">
                     <div class="stat-header">
                         <span class="stat-icon">💻</span>
                         <span class="trophy-icon">🏆</span>
@@ -366,7 +549,7 @@
                     <div class="stat-label">Rating</div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card fade-in">
                     <div class="stat-header">
                         <span class="stat-icon">👨‍🍳</span>
                         <span class="trophy-icon">🏆</span>
@@ -376,7 +559,7 @@
                     <div class="stat-label">Rating</div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card fade-in">
                     <div class="stat-header">
                         <span class="stat-icon">⚔️</span>
                         <span class="trophy-icon">🏆</span>
@@ -390,7 +573,7 @@
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="section-alt">
+    <section id="skills" class="section-alt fade-in">
         <div class="container">
             <h2 class="section-title">
                 <span>⚡</span>
@@ -442,7 +625,7 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects">
+    <section id="projects" class="fade-in">
         <div class="container">
             <h2 class="section-title">
                 <span>🚀</span>
@@ -451,7 +634,7 @@
             <p class="section-subtitle">Projects coming soon! Building something awesome...</p>
             
             <div class="projects-grid">
-                <div class="project-card">
+                <div class="project-card fade-in" data-project="1">
                     <div class="project-header">
                         <div class="project-title">Project Slot 1</div>
                         <span>🔗</span>
@@ -464,7 +647,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card fade-in" data-project="2">
                     <div class="project-header">
                         <div class="project-title">Project Slot 2</div>
                         <span>🔗</span>
@@ -477,7 +660,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card fade-in" data-project="3">
                     <div class="project-header">
                         <div class="project-title">Project Slot 3</div>
                         <span>🔗</span>
@@ -489,16 +672,25 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal container -->
+            <div id="projectModal" class="modal">
+                <div class="modal-content">
+                    <button class="modal-close" id="modalClose">×</button>
+                    <h3 id="modalTitle">Project Title</h3>
+                    <p id="modalDescription">Detailed description will appear here.</p>
+                    <div id="modalTech" class="tech-tags"></div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="contact-section section-alt">
+    <section id="contact" class="contact-section section-alt fade-in">
         <div class="container">
             <h2 class="section-title" style="justify-content: center">Let's Connect</h2>
             <p class="section-subtitle">Open to opportunities and collaborations</p>
             <div class="contact-buttons">
-                <a href="mailto:your.email@example.com" class="btn btn-primary">
+                <a href="mailto:your.email@example.com" class="btn btn-primary" id="emailCopy">
                     <span>📧</span>
                     Email Me
                 </a>
@@ -514,9 +706,11 @@
         </div>
     </section>
 
+    <!-- Back to top button -->
+    <button id="toTop" title="Back to top">↑</button>
+
     <!-- Footer -->
-    <footer>
-        <p>© 2024 Your Name. Built with passion for code.</p>
+        <p>© 2024 Pranav Deshmukh. Built with passion for code.</p>
     </footer>
 
     <script>
@@ -533,6 +727,162 @@
                 }
             });
         });
+
+        // Theme toggle logic
+        const themeToggle = document.getElementById('themeToggle');
+
+        // placeholder for fetching live competitive programming stats
+        async function fetchStats() {
+            try {
+                // Example: fetch('https://your-api.example.com/stats')
+                //   .then(res => res.json())
+                //   .then(data => {
+                //       document.querySelector('.leetcode .stat-rating').textContent = data.leetcode;
+                //       document.querySelector('.codechef .stat-rating').textContent = data.codechef;
+                //       document.querySelector('.codeforces .stat-rating').textContent = data.codeforces;
+                //   });
+            } catch (e) {
+                console.warn('Could not load stats', e);
+            }
+        }
+        fetchStats();
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        if (currentTheme === 'light') themeToggle.textContent = '🌞';
+        themeToggle.addEventListener('click', () => {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            themeToggle.textContent = theme === 'dark' ? '🌙' : '🌞';
+        });
+
+        // Typewriter effect
+        const roles = [
+            'Building Scalable Web Applications',
+            'Crafting APIs & Microservices',
+            'Solving Algorithmic Challenges',
+            'Learning Something New Every Day'
+        ];
+        const typeEl = document.getElementById('typewriter');
+        let roleIndex = 0;
+        let charIndex = 0;
+        let typingForward = true;
+        function type() {
+            const current = roles[roleIndex];
+            if (typingForward) {
+                if (charIndex < current.length) {
+                    typeEl.textContent += current[charIndex++];
+                    setTimeout(type, 100);
+                } else {
+                    typingForward = false;
+                    setTimeout(type, 1200);
+                }
+            } else {
+                if (charIndex > 0) {
+                    typeEl.textContent = current.slice(0, --charIndex);
+                    setTimeout(type, 50);
+                } else {
+                    typingForward = true;
+                    roleIndex = (roleIndex + 1) % roles.length;
+                    setTimeout(type, 500);
+                }
+            }
+        }
+        type();
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Particles background (simple moving dots)
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initParticles() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1
+                });
+            }
+        }
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(34,211,238,0.7)';
+                ctx.fill();
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            });
+            requestAnimationFrame(drawParticles);
+        }
+        initParticles();
+        drawParticles();
+        window.addEventListener('resize', initParticles);
+
+        // Project modal
+        const modal = document.getElementById('projectModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalTech = document.getElementById('modalTech');
+        const modalClose = document.getElementById('modalClose');
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.getAttribute('data-project');
+                modalTitle.textContent = card.querySelector('.project-title').textContent;
+                modalDescription.textContent = card.querySelector('.project-description').textContent;
+                modalTech.innerHTML = card.querySelector('.tech-tags').innerHTML;
+                modal.classList.add('active');
+            });
+        });
+        modalClose.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
+
+        // back to top button
+        const toTop = document.getElementById('toTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                toTop.classList.add('visible');
+            } else {
+                toTop.classList.remove('visible');
+            }
+        });
+        toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // copy email and show toast
+        const emailBtn = document.getElementById('emailCopy');
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+        const toast = document.getElementById('toast');
+        emailBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = 'your.email@example.com';
+            navigator.clipboard.writeText(email).then(() => {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        });
+
     </script>
+    <div id="toast" class="toast">Email copied to clipboard!</div>
 </body>
 </html>
